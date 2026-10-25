@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://chris-ayers.com/assets/images/vscode-logo.png">
+    <title>CodePlay - Web Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loader-container">
+            <div class="logo-loader">
+                <i class="fas fa-code"></i>
+                <h1>Code<span>Play</span></h1>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Loading CodePlay Editor...</div>
+            <div class="loader-tips">
+                <div class="tip">💡 Tip: Double-click on any editor for fullscreen mode</div>
+                <div class="tip">🚀 Press F5 to run your code anytime</div>
+                <div class="tip">🎨 Click theme button to toggle dark/light mode</div>
+            </div>
+            <div class="particles" id="particles"></div>
+        </div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="animated-background">
+        <div class="circles">
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+        <div class="floating-elements">
+            <div class="floating-element"><i class="fab fa-html5"></i></div>
+            <div class="floating-element"><i class="fab fa-css3-alt"></i></div>
+            <div class="floating-element"><i class="fab fa-js-square"></i></div>
+            <div class="floating-element"><i class="fas fa-code"></i></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            <h1>Code<span>Play</span></h1>
+        </div>
+        <div class="header-controls">
+            <button class="btn run-btn" onclick="run()">
+                <i class="fas fa-play"></i> Run Code
+            </button>
+            <button class="btn clear-btn" onclick="clearCode()">
+                <i class="fas fa-broom"></i> Clear
+            </button>
+            <button class="btn theme-btn" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i> Theme
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="editor-side">
+            <!-- HTML Editor -->
+            <div class="editor-box html-editor" id="html-editor">
+                <div class="editor-header">
+                    <div class="editor-title">
+                        <i class="fab fa-html5"></i>
+                        <h3>HTML</h3>
+                        <span class="file-type">.html</span>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="icon-btn fullscreen-toggle" onclick="toggleFullscreen('html-editor')" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="icon-btn" onclick="copyCode('html-code')" title="Copy">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="icon-btn" onclick="formatCode('html-code')" title="Format">
+                            <i class="fas fa-align-left"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="textarea-container" ondblclick="toggleFullscreen('html-editor')">
+                    <textarea id="html-code" placeholder="<!-- Write your HTML here -->" spellcheck="false"></textarea>
+                    <div class="fullscreen-hint">
+                        <i class="fas fa-expand-alt"></i> Double-click for fullscreen
+                    </div>
+                </div>
+                <div class="line-counter">Line: <span id="html-lines">1</span></div>
+            </div>
+
+            <!-- CSS Editor -->
+            <div class="editor-box css-editor" id="css-editor">
+                <div class="editor-header">
+                    <div class="editor-title">
+                        <i class="fab fa-css3-alt"></i>
+                        <h3>CSS</h3>
+                        <span class="file-type">.css</span>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="icon-btn fullscreen-toggle" onclick="toggleFullscreen('css-editor')" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="icon-btn" onclick="copyCode('css-code')" title="Copy">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="icon-btn" onclick="formatCode('css-code')" title="Format">
+                            <i class="fas fa-align-left"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="textarea-container" ondblclick="toggleFullscreen('css-editor')">
+                    <textarea id="css-code" placeholder="/* Write your CSS here */" spellcheck="false"></textarea>
+                    <div class="fullscreen-hint">
+                        <i class="fas fa-expand-alt"></i> Double-click for fullscreen
+                    </div>
+                </div>
+                <div class="line-counter">Line: <span id="css-lines">1</span></div>
+            </div>
+
+            <!-- JS Editor -->
+            <div class="editor-box js-editor" id="js-editor">
+                <div class="editor-header">
+                    <div class="editor-title">
+                        <i class="fab fa-js-square"></i>
+                        <h3>JavaScript</h3>
+                        <span class="file-type">.js</span>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="icon-btn fullscreen-toggle" onclick="toggleFullscreen('js-editor')" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="icon-btn" onclick="copyCode('js-code')" title="Copy">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="icon-btn" onclick="formatCode('js-code')" title="Format">
+                            <i class="fas fa-align-left"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="textarea-container" ondblclick="toggleFullscreen('js-editor')">
+                    <textarea id="js-code" placeholder="// Write your JavaScript here" spellcheck="false"></textarea>
+                    <div class="fullscreen-hint">
+                        <i class="fas fa-expand-alt"></i> Double-click for fullscreen
+                    </div>
+                </div>
+                <div class="line-counter">Line: <span id="js-lines">1</span></div>
+            </div>
+        </div>
+
+        <!-- Output Side -->
+        <div class="output-side">
+            <div class="output-box" id="output-editor">
+                <div class="output-header">
+                    <div class="output-title">
+                        <i class="fas fa-play-circle"></i>
+                        <h3>Live Preview</h3>
+                        <span class="status" id="status">Ready</span>
+                    </div>
+                    <div class="output-actions">
+                        <button class="icon-btn fullscreen-toggle" onclick="toggleFullscreen('output-editor')" title="Fullscreen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="icon-btn" onclick="refreshOutput()" title="Refresh">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="output-container" ondblclick="toggleFullscreen('output-editor')">
+                    <iframe id="output"></iframe>
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Executing code...</p>
+                    </div>
+                    <div class="fullscreen-hint">
+                        <i class="fas fa-expand-alt"></i> Double-click for fullscreen
+                    </div>
+                </div>
+                <div class="output-footer">
+                    <div class="console-tab" onclick="showConsole()">
+                        <i class="fas fa-terminal"></i>
+                        Console
+                        <span class="badge" id="console-count">0</span>
+                    </div>
+                    <div class="output-info">
+                        <span id="output-time">Last run: Never</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <i class="fas fa-laptop-code"></i>
+                <span>CodePlay Editor v1.0</span>
+            </div>
+            <div class="footer-right">
+                <span id="char-count">Characters: 0</span>
+                <span id="time">00:00</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <button class="close-fullscreen" onclick="exitFullscreen()">
+            <i class="fas fa-times"></i> Exit Fullscreen (ESC)
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
